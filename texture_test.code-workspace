@@ -10,7 +10,13 @@
 	"settings": {
 		"files.associations": {
 			"cstring": "c",
-			"variant": "c"
+			"variant": "c",
+			"string.h": "c",
+			"malloc.h": "c",
+			"yaul.h": "c",
+			"internal.h": "c",
+			"memalloc.h": "c",
+			"tlsf.h": "c"
 		}
 	}
 }

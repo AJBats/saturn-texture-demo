@@ -50,3 +50,9 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Saturn build resuilts
+*.iso
+*.cue
+build
+cd

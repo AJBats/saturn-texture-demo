@@ -1,5 +1,5 @@
 #include "bitmap.h"
-#include <malloc.h>
+#include "allocator/memalloc.h"
 #include <string.h>
 
 BYTE* LoadBitmapFile(const uint8_t* bitmapFile, int bitmapSize, BITMAPINFOHEADER *bitmapInfoHeader)
@@ -31,7 +31,7 @@ BYTE* LoadBitmapFile(const uint8_t* bitmapFile, int bitmapSize, BITMAPINFOHEADER
 
     //load the palette for 8 bits per pixel
     if(bitmapInfoHeader->biBitCount == 8) {       
-        colours=(RGBQUAD*)malloc(numColours * sizeof(RGBQUAD));
+        colours=(RGBQUAD*)mem_alloc(numColours * sizeof(RGBQUAD));
         memcpy(colours, &bitmapFile[cursor], numColours * sizeof(RGBQUAD));
         cursor += numColours * sizeof(RGBQUAD);
     }
@@ -59,13 +59,13 @@ BYTE* LoadBitmapFile(const uint8_t* bitmapFile, int bitmapSize, BITMAPINFOHEADER
     cursor = bitmapFileHeader.bfOffBits;
 
     //allocate enough memory for the bitmap image data
-    bitmapImage = (BYTE*)malloc(bitmapInfoHeader->biSizeImage);
+    bitmapImage = (BYTE*)mem_alloc(bitmapInfoHeader->biSizeImage);
 
     //verify memory allocation
     if (!bitmapImage)
     {
-        free(bitmapImage);
-        free(colours);
+        mem_free(bitmapImage);
+        mem_free(colours);
         return NULL;
     }
 
@@ -76,8 +76,8 @@ BYTE* LoadBitmapFile(const uint8_t* bitmapFile, int bitmapSize, BITMAPINFOHEADER
     //make sure bitmap image data was read
     if (bitmapImage == NULL)
     {
-        free(bitmapImage);
-        free(colours);
+        mem_free(bitmapImage);
+        mem_free(colours);
         return NULL;
     }
 

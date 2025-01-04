@@ -1,3 +1,6 @@
+#ifndef BITMAP_H
+#define BITPAM_H
+
 #include <stdint.h>
 
 typedef int32_t LONG;
@@ -42,3 +45,5 @@ typedef struct tagRGBQUAD {
 #pragma pack(pop)
 
 BYTE* LoadBitmapFile(const uint8_t* bitmapFile, int bitmapSize, BITMAPINFOHEADER *bitmapInfoHeader);
+
+#endif // BITMAP_H

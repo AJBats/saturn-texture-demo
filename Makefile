@@ -28,9 +28,10 @@ SH_SRCS:= \
 	source/saturn/graphics/graphics_tails.c \
 	source/saturn/graphics/graphics_baku.c \
 \
-    source/bitmap.c
+    source/bitmap.c \
+    source/allocator/saturn/memalloc.c
 
-SH_CFLAGS+= -O2 -I. -DDEBUG -g $(MIC3D_CFLAGS)
+SH_CFLAGS+= -O2 -Isource -DDEBUG -g $(MIC3D_CFLAGS)
 SH_LDFLAGS+= $(MIC3D_LDFLAGS)
 
 IP_VERSION:= V1.000

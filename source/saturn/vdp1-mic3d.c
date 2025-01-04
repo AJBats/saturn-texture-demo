@@ -14,7 +14,7 @@
 
 #include <mic3d.h>
 
-#include "bitmap/bitmap.h"
+#include "bitmap.h"
 
 extern const mesh_t mesh_m;
 extern const mesh_t mesh_i;
