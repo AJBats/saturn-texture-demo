@@ -1,0 +1,53 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "TextureTest - Debug",
+            "command": "C:\\msys64\\ucrt64\\bin\\gcc.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${workspaceFolder}/source/windows/*.c",
+                "${workspaceFolder}/source/*.c",
+                "-o",
+                "${workspaceFolder}\\texture_test.exe"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Builds texture test project with debug config."
+        },
+        {
+            "type": "cppbuild",
+            "label": "TextureTest - Release",
+            "command": "C:\\msys64\\ucrt64\\bin\\gcc.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-O3",
+                "${workspaceFolder}/source/windows/*.c",
+                "${workspaceFolder}/source/*.c",
+                "-o",
+                "${workspaceFolder}\\texture_test.exe"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Builds texture test project with release config."
+        }
+    ],
+    "version": "2.0.0"
+}
