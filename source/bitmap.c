@@ -1,12 +1,12 @@
 #include "bitmap.h"
-#include "allocator/memalloc.h"
+#include <stdlib.h>
 #include <string.h>
 
-BYTE* LoadBitmapFile(const uint8_t* bitmapFile, int bitmapSize, BITMAPINFOHEADER *bitmapInfoHeader)
+BYTE* LoadBitmapFile(const uint8_t* bitmapFile, BITMAPINFOHEADER *bitmapInfoHeader)
 {
     BITMAPFILEHEADER bitmapFileHeader;  //our bitmap file header
     unsigned char *bitmapImage;  //store image data
-    int imageIdx=0;  //image index counter
+    DWORD imageIdx=0;  //image index counter
     unsigned char tempRGB;  //our swap variable
     int cursor = 0;
 
@@ -31,7 +31,7 @@ BYTE* LoadBitmapFile(const uint8_t* bitmapFile, int bitmapSize, BITMAPINFOHEADER
 
     //load the palette for 8 bits per pixel
     if(bitmapInfoHeader->biBitCount == 8) {       
-        colours=(RGBQUAD*)mem_alloc(numColours * sizeof(RGBQUAD));
+        colours=(RGBQUAD*)malloc(numColours * sizeof(RGBQUAD));
         memcpy(colours, &bitmapFile[cursor], numColours * sizeof(RGBQUAD));
         cursor += numColours * sizeof(RGBQUAD);
     }
@@ -59,13 +59,13 @@ BYTE* LoadBitmapFile(const uint8_t* bitmapFile, int bitmapSize, BITMAPINFOHEADER
     cursor = bitmapFileHeader.bfOffBits;
 
     //allocate enough memory for the bitmap image data
-    bitmapImage = (BYTE*)mem_alloc(bitmapInfoHeader->biSizeImage);
+    bitmapImage = (BYTE*)malloc(bitmapInfoHeader->biSizeImage);
 
     //verify memory allocation
     if (!bitmapImage)
     {
-        mem_free(bitmapImage);
-        mem_free(colours);
+        free(bitmapImage);
+        free(colours);
         return NULL;
     }
 
@@ -76,8 +76,8 @@ BYTE* LoadBitmapFile(const uint8_t* bitmapFile, int bitmapSize, BITMAPINFOHEADER
     //make sure bitmap image data was read
     if (bitmapImage == NULL)
     {
-        mem_free(bitmapImage);
-        mem_free(colours);
+        free(bitmapImage);
+        free(colours);
         return NULL;
     }
 

@@ -16,7 +16,8 @@
 			"yaul.h": "c",
 			"internal.h": "c",
 			"memalloc.h": "c",
-			"tlsf.h": "c"
+			"tlsf.h": "c",
+			"stdlib.h": "c"
 		}
 	}
 }

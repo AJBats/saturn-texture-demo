@@ -21,7 +21,7 @@ int main(int argc, char **argv)
 
     BITMAPINFOHEADER header;
     memset(&header, 0, sizeof(header));
-    BYTE* bitmap = LoadBitmapFile(bitmapMem, fsize, &header);
+    BYTE* bitmap = LoadBitmapFile(bitmapMem, &header);
 	printf("Hello world");
 
 

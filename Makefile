@@ -28,8 +28,7 @@ SH_SRCS:= \
 	source/saturn/graphics/graphics_tails.c \
 	source/saturn/graphics/graphics_baku.c \
 \
-    source/bitmap.c \
-    source/allocator/saturn/memalloc.c
+    source/bitmap.c
 
 SH_CFLAGS+= -O2 -Isource -DDEBUG -g $(MIC3D_CFLAGS)
 SH_LDFLAGS+= $(MIC3D_LDFLAGS)

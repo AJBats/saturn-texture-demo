@@ -44,6 +44,6 @@ typedef struct tagRGBQUAD {
 
 #pragma pack(pop)
 
-BYTE* LoadBitmapFile(const uint8_t* bitmapFile, int bitmapSize, BITMAPINFOHEADER *bitmapInfoHeader);
+BYTE* LoadBitmapFile(const uint8_t* bitmapFile, BITMAPINFOHEADER *bitmapInfoHeader);
 
 #endif // BITMAP_H
