@@ -2,12 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-BYTE* LoadBitmapFile(const uint8_t* bitmapFile, BITMAPINFOHEADER *bitmapInfoHeader)
+bool LoadBitmapFile(const uint8_t* bitmapFile, BYTE** outBitmap, RGBQUAD** outColors, BITMAPINFOHEADER *outBitmapInfoHeader)
 {
     BITMAPFILEHEADER bitmapFileHeader;  //our bitmap file header
-    unsigned char *bitmapImage;  //store image data
-    DWORD imageIdx=0;  //image index counter
-    unsigned char tempRGB;  //our swap variable
     int cursor = 0;
 
     //read the bitmap file header
@@ -21,24 +18,24 @@ BYTE* LoadBitmapFile(const uint8_t* bitmapFile, BITMAPINFOHEADER *bitmapInfoHead
     }
 
     //read the bitmap info header
-    memcpy(bitmapInfoHeader, &bitmapFile[cursor], sizeof(BITMAPINFOHEADER));
+    memcpy(outBitmapInfoHeader, &bitmapFile[cursor], sizeof(BITMAPINFOHEADER));
     cursor += sizeof(BITMAPINFOHEADER);
 
     // palette reading method 1:
-    //set the number of colours
-    int numColours=1 << bitmapInfoHeader->biBitCount;
-    RGBQUAD* colours = NULL;
+    //set the number of colors
+    int numColours=1 << outBitmapInfoHeader->biBitCount;
+    *outColors = NULL;
 
     //load the palette for 8 bits per pixel
-    if(bitmapInfoHeader->biBitCount == 8) {       
-        colours=(RGBQUAD*)malloc(numColours * sizeof(RGBQUAD));
-        memcpy(colours, &bitmapFile[cursor], numColours * sizeof(RGBQUAD));
+    if(outBitmapInfoHeader->biBitCount == 8) {       
+        *outColors=(RGBQUAD*)malloc(numColours * sizeof(RGBQUAD));
+        memcpy(*outColors, &bitmapFile[cursor], numColours * sizeof(RGBQUAD));
         cursor += numColours * sizeof(RGBQUAD);
     }
     /*
     // method 2:
      //NOW LOAD THE COLOR PALETTE IF THERE IS ONE
-        if(bitmap->bitmapinfoheader.biBitCount == 8)
+        if(bitmap->outBitmapInfoHeader.biBitCount == 8)
         {
                 _lread(file_handle, &bitmap->palette,MAX_COLORS_PALETTE*sizeof(PALETTEENTRY));
  
@@ -59,36 +56,40 @@ BYTE* LoadBitmapFile(const uint8_t* bitmapFile, BITMAPINFOHEADER *bitmapInfoHead
     cursor = bitmapFileHeader.bfOffBits;
 
     //allocate enough memory for the bitmap image data
-    bitmapImage = (BYTE*)malloc(bitmapInfoHeader->biSizeImage);
+    *outBitmap = (BYTE*)malloc(outBitmapInfoHeader->biSizeImage);
 
     //verify memory allocation
-    if (!bitmapImage)
+    if (!*outBitmap)
     {
-        free(bitmapImage);
-        free(colours);
-        return NULL;
+        free(*outBitmap);
+        free(*outColors);
+        *outBitmap = NULL;
+        *outColors = NULL;
+        return false;
     }
 
     //read in the bitmap image data
-    //fread(bitmapImage,bitmapInfoHeader->biSizeImage,1,filePtr);
-    memcpy(bitmapImage, &bitmapFile[cursor], bitmapInfoHeader->biSizeImage);
+    //fread(bitmapImage,outBitmapInfoHeader->biSizeImage,1,filePtr);
+    memcpy(*outBitmap, &bitmapFile[cursor], outBitmapInfoHeader->biSizeImage);
 
     //make sure bitmap image data was read
-    if (bitmapImage == NULL)
+    if (*outBitmap == NULL)
     {
-        free(bitmapImage);
-        free(colours);
-        return NULL;
+        free(*outBitmap);
+        free(*outColors);
+        *outBitmap = NULL;
+        *outColors = NULL;
+        return false;
     }
 
     //swap the R and B values to get RGB (bitmap is BGR)
-    for (imageIdx = 0;imageIdx < bitmapInfoHeader->biSizeImage;imageIdx+=3)
-    {
-        tempRGB = bitmapImage[imageIdx];
-        bitmapImage[imageIdx] = bitmapImage[imageIdx + 2];
-        bitmapImage[imageIdx + 2] = tempRGB;
-    }
+    //for (imageIdx = 0;imageIdx < outBitmapInfoHeader->biSizeImage;imageIdx+=3)
+    //{
+    //    tempRGB = *outBitmap[imageIdx];
+    //    *outBitmap[imageIdx] = *outBitmap[imageIdx + 2];
+    //    *outBitmap[imageIdx + 2] = tempRGB;
+    //}
 
     //close file and return bitmap image data
-    return bitmapImage;
+    return true;
 }

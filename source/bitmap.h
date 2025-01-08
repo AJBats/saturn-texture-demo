@@ -2,6 +2,7 @@
 #define BITPAM_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 typedef int32_t LONG;
 typedef uint32_t DWORD;   // DWORD = unsigned 32 bit value
@@ -44,6 +45,6 @@ typedef struct tagRGBQUAD {
 
 #pragma pack(pop)
 
-BYTE* LoadBitmapFile(const uint8_t* bitmapFile, BITMAPINFOHEADER *bitmapInfoHeader);
+bool LoadBitmapFile(const uint8_t* bitmapFile, BYTE** outBitmap, RGBQUAD** outColors, BITMAPINFOHEADER *outBitmapInfoHeader);
 
 #endif // BITMAP_H

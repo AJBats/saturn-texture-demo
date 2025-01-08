@@ -7,7 +7,7 @@
 int main(int argc, char **argv)
 {
     //open file in read binary mode
-    FILE* filePtr = fopen("vdp1-mic3d/assets/test.bmp","rb");
+    FILE* filePtr = fopen("assets/test.bmp","rb");
     if (filePtr == NULL)
         return 0;
     
@@ -21,9 +21,13 @@ int main(int argc, char **argv)
 
     BITMAPINFOHEADER header;
     memset(&header, 0, sizeof(header));
-    BYTE* bitmap = LoadBitmapFile(bitmapMem, &header);
-	printf("Hello world");
-
+    BYTE* bitmap = NULL;
+    RGBQUAD* colors = NULL;
+    bool result = LoadBitmapFile(bitmapMem, &bitmap, &colors, &header);
+	printf("Result %s", result? "true" : "false");
+    
+    free(bitmap);
+    free(colors);
 
 	return 0;
 }
