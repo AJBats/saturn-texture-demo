@@ -16,7 +16,7 @@ This project depends on https://github.com/robertoduarte/yaul-win64 specifically
 ## Building
 
 ### Windows
-Open a `cmd` shell in and run `yaul-0.3.1-win64-20240125\scripts\setenv.bat`. Then start VS Code using `code` on the samd `cmd` shell. (This will inherited the Yaul environment in VS Code). Once inside VS Code you can open the `texture_test.code-workspace`.
+Open a `cmd` shell in and run `yaul-0.3.1-win64-20240125\scripts\setenv.bat`. Then start VS Code using `code` on the same `cmd` shell. (This will inherited the Yaul environment in VS Code). Once inside VS Code you can open the `texture_test.code-workspace`.
 
 **To build the Windows project:**
 ```
