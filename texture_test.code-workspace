@@ -17,7 +17,11 @@
 			"internal.h": "c",
 			"memalloc.h": "c",
 			"tlsf.h": "c",
-			"stdlib.h": "c"
+			"stdlib.h": "c",
+			"limits": "c",
+			"smpc.h": "c",
+			"cpu.h": "c",
+			"bup.h": "c"
 		}
 	}
 }

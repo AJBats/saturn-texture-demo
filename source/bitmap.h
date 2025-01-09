@@ -43,8 +43,15 @@ typedef struct tagRGBQUAD {
     BYTE rgbReserved;
 } RGBQUAD;
 
+typedef struct tagRGB555 {
+    BYTE rgbBlue : 5;
+    BYTE rgbGreen : 5;
+    BYTE rgbRed : 5;
+    BYTE rgbReserved : 1;
+} RGB555;
+
 #pragma pack(pop)
 
-bool LoadBitmapFile(const uint8_t* bitmapFile, BYTE** outBitmap, RGBQUAD** outColors, BITMAPINFOHEADER *outBitmapInfoHeader);
+bool LoadBitmapFile(const uint8_t* bitmapFile, BYTE** outBitmap, RGBQUAD** outColors, RGB555** outColors555, BITMAPINFOHEADER *outBitmapInfoHeader);
 
 #endif // BITMAP_H

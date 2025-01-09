@@ -22,12 +22,14 @@ int main(int argc, char **argv)
     BITMAPINFOHEADER header;
     memset(&header, 0, sizeof(header));
     BYTE* bitmap = NULL;
-    RGBQUAD* colors = NULL;
-    bool result = LoadBitmapFile(bitmapMem, &bitmap, &colors, &header);
+    //RGBQUAD* colors = NULL;
+    RGB555* colors555 = NULL;
+    bool result = LoadBitmapFile(bitmapMem, &bitmap, NULL, &colors555, &header);
 	printf("Result %s", result? "true" : "false");
     
     free(bitmap);
-    free(colors);
+    //free(colors);
+    free(colors555);
 
 	return 0;
 }
