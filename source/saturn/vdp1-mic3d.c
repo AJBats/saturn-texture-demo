@@ -52,15 +52,13 @@ static workarea_mic3d_colors_t _pool_colors;
 static workarea_mic3d_work_t _pool_work;
 
 static workarea_mic3d_t _workarea = {
-    &_pool_depth_values,   &_pool_z_values, &_pool_screen_points,
-    &_pool_sort_singles,   &_pool_cmdts,    &_pool_render_matrices,
-    &_pool_light_matrices, &_pool_colors,   &_pool_work
-};
+    &_pool_depth_values, &_pool_z_values, &_pool_screen_points,
+    &_pool_sort_singles, &_pool_cmdts, &_pool_render_matrices,
+    &_pool_light_matrices, &_pool_colors, &_pool_work};
 
 static sort_list_t _sort_list[512] __aligned(4);
 
-int
-main(void)
+int main(void)
 {
         dbgio_init();
         dbgio_dev_default_init(DBGIO_DEV_MEDNAFEN_DEBUG);
@@ -75,25 +73,40 @@ main(void)
         tlist_set(_textures, 8);
 
         light_gst_set(_pool_shading_tables,
-            CONFIG_MIC3D_CMDT_COUNT,
-            (vdp1_vram_t)(vdp1_vram_partitions.gouraud_base + 512));
+                      CONFIG_MIC3D_CMDT_COUNT,
+                      (vdp1_vram_t)(vdp1_vram_partitions.gouraud_base + 512));
 
         vdp1_vram_t texture_base;
         texture_base = (vdp1_vram_t)vdp1_vram_partitions.texture_base;
 
-        texture_base += _texture_load(_textures, 0, &picture_mika, texture_base);
-        texture_base += _texture_load(_textures, 1, &picture_tails, texture_base);
-        texture_base += _texture_load(_textures, 2, &picture_baku, texture_base);
+        picture_t testPic;
+        palette_t testPal;
+        int bitmapLoadResult = LoadBitmapFile(test_bmp, &testPic, &testPal);
 
-        /* This only works because by default, the CMD_COLR value is 0x0000,
-         * which means it selects the first 256-color palette bank in VDP2
-         * CRAM */
-        _palette_load(0, 0, &palette_baku);
+        if (bitmapLoadResult == 3)
+        {
+                texture_base += _texture_load(_textures, 0, &testPic, texture_base);
+                _palette_load(0, 0, &testPal);
+        }
+        else
+        {
+                if (bitmapLoadResult == 0)
+                        texture_base += _texture_load(_textures, 0, &picture_mika, texture_base);
+                if (bitmapLoadResult == 1)
+                        texture_base += _texture_load(_textures, 1, &picture_tails, texture_base);
+                if (bitmapLoadResult == 2)
+                        texture_base += _texture_load(_textures, 2, &picture_baku, texture_base);
+
+                /* This only works because by default, the CMD_COLR value is 0x0000,
+                 * which means it selects the first 256-color palette bank in VDP2
+                 * CRAM */
+                _palette_load(0, 0, &palette_baku);
+        }
 
         camera_t camera;
 
-        camera.position.x = FIX16( 0.0);
-        camera.position.y = FIX16( 0.0);
+        camera.position.x = FIX16(0.0);
+        camera.position.y = FIX16(0.0);
         camera.position.z = FIX16(10.0);
 
         camera.target.x = FIX16(0.0);
@@ -109,7 +122,8 @@ main(void)
         angle_t theta;
         theta = DEG2ANGLE(0.0);
 
-        for (uint32_t i = 0; i < 512; i++) {
+        for (uint32_t i = 0; i < 512; i++)
+        {
                 const rgb1555_t color = RGB1555(1,
                                                 fix16_int32_to(fix16_int32_from(i * 31) / 512U),
                                                 fix16_int32_to(fix16_int32_from(i * 31) / 512U),
@@ -133,25 +147,25 @@ main(void)
         fix16_mat33_identity(&world[3].rotation);
         fix16_mat33_identity(&world[4].rotation);
 
-        world[0].translation.x = FIX16(   0.0);
-        world[0].translation.y = FIX16(   0.0);
+        world[0].translation.x = FIX16(0.0);
+        world[0].translation.y = FIX16(0.0);
         world[0].translation.z = FIX16(-100.0);
 
-        world[1].translation.x = FIX16(  50.0);
-        world[1].translation.y = FIX16(   0.0);
+        world[1].translation.x = FIX16(50.0);
+        world[1].translation.y = FIX16(0.0);
         world[1].translation.z = FIX16(-100.0);
 
-        world[2].translation.x = FIX16(  10.0);
-        world[2].translation.y = FIX16(  10.0);
-        world[2].translation.z = FIX16( -40.0);
+        world[2].translation.x = FIX16(10.0);
+        world[2].translation.y = FIX16(10.0);
+        world[2].translation.z = FIX16(-40.0);
 
-        world[3].translation.x = FIX16(   0.0);
-        world[3].translation.y = FIX16(  10.0);
-        world[3].translation.z = FIX16( -40.0);
+        world[3].translation.x = FIX16(0.0);
+        world[3].translation.y = FIX16(10.0);
+        world[3].translation.z = FIX16(-40.0);
 
-        world[4].translation.x = FIX16( -10.0);
-        world[4].translation.y = FIX16(  10.0);
-        world[4].translation.z = FIX16( -40.0);
+        world[4].translation.x = FIX16(-10.0);
+        world[4].translation.y = FIX16(10.0);
+        world[4].translation.z = FIX16(-40.0);
 
         /* Set up a command table for insertion */
         vdp1_cmdt_t cmdt_polygon;
@@ -160,7 +174,8 @@ main(void)
         polygon_draw_mode.raw = 0x0000;
         vdp1_cmdt_draw_mode_set(&cmdt_polygon, polygon_draw_mode);
 
-        while (true) {
+        while (true)
+        {
                 /* Call this before rendering */
                 render_start();
 
@@ -197,11 +212,10 @@ main(void)
 
                 /* Rotate a 2D quad */
                 const fix16_vec3_t points[] = {
-                        FIX16_VEC3_INITIALIZER(-10.0, -10.0, 0),
-                        FIX16_VEC3_INITIALIZER( 10.0, -10.0, 0),
-                        FIX16_VEC3_INITIALIZER( 10.0,  10.0, 0),
-                        FIX16_VEC3_INITIALIZER(-10.0,  10.0, 0)
-                };
+                    FIX16_VEC3_INITIALIZER(-10.0, -10.0, 0),
+                    FIX16_VEC3_INITIALIZER(10.0, -10.0, 0),
+                    FIX16_VEC3_INITIALIZER(10.0, 10.0, 0),
+                    FIX16_VEC3_INITIALIZER(-10.0, 10.0, 0)};
 
                 /* Multiplying or dividing an angle requires a conditional sign
                  * extend, hence the need for angle_int32_to() */
@@ -212,7 +226,8 @@ main(void)
                 fix16_mat33_t rot_2d;
                 fix16_mat33_z_rotation_create(theta_mul_2, &rot_2d);
 
-                for (uint32_t i = 0; i < 4; i++) {
+                for (uint32_t i = 0; i < 4; i++)
+                {
                         fix16_vec3_t rot_p;
                         fix16_mat33_vec3_mul(&rot_2d, &points[i], &rot_p);
 
@@ -225,13 +240,13 @@ main(void)
 
                 cmdt_polygon.cmd_vertices[0].x = -50;
                 cmdt_polygon.cmd_vertices[0].y = -50;
-                cmdt_polygon.cmd_vertices[1].x =  50;
+                cmdt_polygon.cmd_vertices[1].x = 50;
                 cmdt_polygon.cmd_vertices[1].y = -50;
-                cmdt_polygon.cmd_vertices[2].x =  50;
-                cmdt_polygon.cmd_vertices[2].y =  50;
+                cmdt_polygon.cmd_vertices[2].x = 50;
+                cmdt_polygon.cmd_vertices[2].y = 50;
                 cmdt_polygon.cmd_vertices[3].x = -50;
-                cmdt_polygon.cmd_vertices[3].y =  50;
-                cmdt_polygon.cmd_colr          = 0xBDEF;
+                cmdt_polygon.cmd_vertices[3].y = 50;
+                cmdt_polygon.cmd_colr = 0xBDEF;
                 /* Call this before render_end() */
                 render_cmdt_insert(&cmdt_polygon, FIX16(-150.0));
 
@@ -248,14 +263,13 @@ main(void)
         }
 }
 
-void
-user_init(void)
+void user_init(void)
 {
         vdp2_tvmd_display_res_set(VDP2_TVMD_INTERLACE_NONE, VDP2_TVMD_HORZ_NORMAL_B,
-            VDP2_TVMD_VERT_224);
+                                  VDP2_TVMD_VERT_224);
 
         vdp2_scrn_back_color_set(VDP2_VRAM_ADDR(3, 0x01FFFE),
-            RGB1555(1, 0, 3, 15));
+                                 RGB1555(1, 0, 3, 15));
 
         vdp1_sync_interval_set(-1);
 
@@ -272,9 +286,9 @@ user_init(void)
 static size_t
 _texture_load(texture_t *textures, uint32_t slot, const picture_t *picture, vdp1_vram_t texture_base)
 {
-        texture_t * const texture = &textures[slot];
+        texture_t *const texture = &textures[slot];
 
-        texture->size       = TEXTURE_SIZE(picture->width, picture->height);
+        texture->size = TEXTURE_SIZE(picture->width, picture->height);
         texture->vram_index = TEXTURE_VRAM_INDEX(texture_base);
 
         scu_dma_transfer(0, (void *)texture_base, picture->data, picture->data_size);

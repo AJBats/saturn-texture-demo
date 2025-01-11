@@ -1,0 +1,2 @@
+This dir is a place to put faked/mocked yaul modules that can make cross
+compiling easier between windows tests and saturn production.

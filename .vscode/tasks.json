@@ -10,6 +10,7 @@
                 "${workspaceFolder}/source/windows/*.c",
                 "${workspaceFolder}/source/*.c",
                 "-I${workspaceFolder}/source",
+                "-I${workspaceFolder}/source/windows/winyaul",
                 "-o",
                 "${workspaceFolder}\\texture_test.exe"
             ],
