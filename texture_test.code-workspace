@@ -23,7 +23,8 @@
 			"cpu.h": "c",
 			"bup.h": "c",
 			"types.h": "c",
-			"mic3d.h": "c"
+			"mic3d.h": "c",
+			"sattex.h": "c"
 		}
 	}
 }

@@ -56,3 +56,7 @@ dkms.conf
 *.cue
 build
 cd
+
+# Files produced during testing
+*.tex
+*.pal
