@@ -24,7 +24,9 @@
 			"bup.h": "c",
 			"types.h": "c",
 			"mic3d.h": "c",
-			"sattex.h": "c"
+			"sattex.h": "c",
+			"bitmap.h": "c",
+			"stdbool.h": "c"
 		}
 	}
 }

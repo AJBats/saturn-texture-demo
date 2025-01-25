@@ -17,6 +17,8 @@ uint16_t swap_endian_16(uint16_t value)
     return (value >> 8) | (value << 8);
 }
 
+#ifdef _WIN32
+// Win32 util
 bool CreateSaturnTextureFile(const char *outFileName, uint8_t *bitmap, uint16_t *palette, BITMAPINFOHEADER *header)
 {
     const uint16_t NAME_LEN = 260;
@@ -72,6 +74,7 @@ bool CreateSaturnTextureFile(const char *outFileName, uint8_t *bitmap, uint16_t 
 
     return true;
 }
+#endif // _WIN32
 
 bool ReadSaturnTexture(const uint8_t *texFileBytes, SatTexture *outHeader, uint8_t **outData)
 {

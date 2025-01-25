@@ -14,7 +14,7 @@
 
 #include <mic3d.h>
 
-#include "bitmap.h"
+#include "sattex.h"
 
 extern const mesh_t mesh_m;
 extern const mesh_t mesh_i;
@@ -30,8 +30,10 @@ extern const picture_t picture_baku;
 
 extern const palette_t palette_baku;
 
-extern const uint8_t test_bmp[];
-extern const uint8_t test_bmp_end[];
+extern const uint8_t test_tex[];
+extern const uint8_t test_tex_end[];
+extern const uint8_t test_pal[];
+extern const uint8_t test_pal_end[];
 
 static texture_t _textures[8];
 
@@ -81,20 +83,33 @@ int main(void)
 
         picture_t testPic;
         palette_t testPal;
-        int bitmapLoadResult = LoadBitmapFile(test_bmp, &testPic, &testPal);
+        SatTexture testHeader;
+        uint8_t* textureData = NULL;
+        bool texGood = ReadSaturnTexture(test_tex, &testHeader, &textureData);
+        testPic.data = textureData;
+        testPic.data_size = testHeader.data_size;
+        testPic.height = testHeader.height;
+        testPic.width = testHeader.width;
+        testPic.palette_index = 0;
 
-        if (bitmapLoadResult == 3)
+        SatPalette testPalette;
+        uint8_t* palData = NULL;
+        bool palGood = ReadSaturnPalette(test_pal, &testPalette, &palData);
+        testPal.data = palData;
+        testPal.data_size = testPalette.data_size;
+
+        if (texGood && palGood)
         {
                 texture_base += _texture_load(_textures, 0, &testPic, texture_base);
                 _palette_load(0, 0, &testPal);
         }
         else
         {
-                if (bitmapLoadResult == 0)
+                //if (bitmapLoadResult == 0)
                         texture_base += _texture_load(_textures, 0, &picture_mika, texture_base);
-                if (bitmapLoadResult == 1)
+                //if (bitmapLoadResult == 1)
                         texture_base += _texture_load(_textures, 1, &picture_tails, texture_base);
-                if (bitmapLoadResult == 2)
+                //if (bitmapLoadResult == 2)
                         texture_base += _texture_load(_textures, 2, &picture_baku, texture_base);
 
                 /* This only works because by default, the CMD_COLR value is 0x0000,

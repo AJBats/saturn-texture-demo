@@ -11,7 +11,8 @@ include $(YAUL_INSTALL_ROOT)/share/build.mic3d.mk
 
 # Each asset follows the format: <path>;<symbol>. Duplicates are removed
 BUILTIN_ASSETS+= \
-	assets/test.bmp;test_bmp
+	assets/test.tex;test_tex \
+	assets/test.pal;test_pal \
 
 SH_PROGRAM:= vdp1-mic3d
 SH_SRCS:= \
@@ -28,7 +29,7 @@ SH_SRCS:= \
 	source/saturn/graphics/graphics_tails.c \
 	source/saturn/graphics/graphics_baku.c \
 \
-    source/bitmap.c
+    source/sattex.c
 
 SH_CFLAGS+= -O2 -Isource -DDEBUG -g $(MIC3D_CFLAGS)
 SH_LDFLAGS+= $(MIC3D_LDFLAGS)
