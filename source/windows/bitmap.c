@@ -2,10 +2,31 @@
 #include <stdlib.h>
 #include <string.h>
 
+uint8_t *ProcessImageData(const uint8_t *bmpImageData, BITMAPINFOHEADER *outHeader)
+{
+    int paddedWidthSize = (outHeader->biWidth + 3) & ~3; // Align to 4 bytes
+    int packedImageSize = outHeader->biWidth * outHeader ->biHeight;
+
+    // change the header to report the packed size from now on.
+    outHeader->biSizeImage = packedImageSize;
+    
+    uint8_t* imageData = malloc(packedImageSize);
+
+    if(!imageData) {
+        return NULL;
+    }
+
+    // Remove padding row by row
+    for (int row = 0; row < outHeader ->biHeight; row++) {
+        // Copy only the valid pixel data from each row
+        memcpy(imageData + (row * outHeader->biWidth), bmpImageData + (row * paddedWidthSize), outHeader->biWidth);
+    }
+    return imageData;
+}
+
 bool LoadBitmapFile(const uint8_t *bitmapFile, uint8_t **outBitmap, uint16_t **outColors, BITMAPINFOHEADER *outHeader)
 {
     BITMAPFILEHEADER bitmapFileHeader; // our bitmap file header
-    // BITMAPINFOHEADER bitmapInfoHeader;
     int cursor = 0;
 
     // outputs are not optional
@@ -68,20 +89,15 @@ bool LoadBitmapFile(const uint8_t *bitmapFile, uint8_t **outBitmap, uint16_t **o
     // fseek(filePtr, bitmapFileHeader.bfOffBits, SEEK_SET);
     cursor = bitmapFileHeader.bfOffBits;
 
-    // allocate enough memory for the bitmap image data
-    (*outBitmap) = malloc(outHeader->biSizeImage);
+    (*outBitmap) = ProcessImageData(&bitmapFile[cursor], outHeader);
 
     // verify memory allocation
     if (*outBitmap == NULL)
     {
-        // TODO: figure out a non const container so we can free this.
         free(*outColors);
         (*outColors) = NULL;
         return false;
     }
 
-    // read in the bitmap image data
-    // fread(bitmapImage,outHeader->biSizeImage,1,filePtr);
-    memcpy(*outBitmap, &bitmapFile[cursor], outHeader->biSizeImage);
     return true;
 }
